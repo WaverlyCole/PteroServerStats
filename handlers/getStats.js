@@ -39,22 +39,25 @@ module.exports = async function getStats(client) {
 
         if (fs.existsSync("cache.json")) {
             try {
-                const data = JSON.parse(fs.readFileSync("cache.json"));
-                data.stats = {
-                    current_state: 'missing',
-                    is_suspended: false,
-                    resources: {
-                        memory_bytes: 0,
-                        cpu_absolute: 0,
-                        disk_bytes: 0,
-                        network_rx_bytes: 0,
-                        network_tx_bytes: 0,
-                        uptime: 0
+                const allServers = JSON.parse(fs.readFileSync("cache.json"));
+
+                for (const server of allServers) {
+                    server.stats = {
+                        current_state: 'missing',
+                        is_suspended: false,
+                        resources: {
+                            memory_bytes: 0,
+                            cpu_absolute: 0,
+                            disk_bytes: 0,
+                            network_rx_bytes: 0,
+                            network_tx_bytes: 0,
+                            uptime: 0
+                        }
                     }
                 }
-
-                sendMessage(client, data)
-                return data
+                
+                sendMessage(client, allServers)
+                return allServers
             } catch {
                 console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("Something went wrong with cache data..."));
                 return null
