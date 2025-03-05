@@ -18,6 +18,9 @@ module.exports = async function sendMessage(client, allServers) {
         }
     })();
 
+    // Save server state to cache
+    fs.writeFileSync("cache.json", JSON.stringify(allServers, null, 2), "utf8");
+
     // Create an array to store embeds
     const embeds = [];
 
@@ -39,9 +42,6 @@ module.exports = async function sendMessage(client, allServers) {
                     .setDescription(`Server \`${server.details.name}\` is back online.`)
             );
         }
-
-        // Save server state to cache
-        fs.writeFileSync("cache.json", JSON.stringify(server, null, 2), "utf8");
 
         // Create a new embed for the server
         const embed = new EmbedBuilder()
