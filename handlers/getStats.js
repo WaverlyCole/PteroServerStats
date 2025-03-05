@@ -17,7 +17,7 @@ module.exports = async function getStats(client) {
         for (const server of allServers) {
             const serverStats = await promiseTimeout(getServerStats(server.uuid), config.timeout * 1000);
 
-            if (stats.current_state === "missing") {
+            if (serverStats.current_state === "missing") {
                 console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright(`${server.name} (${server.uuid}) is currently down.`));
             } else {
                 console.log(cliColor.cyanBright("[PSS] ") + cliColor.green(`${server.name} (${server.uuid}) state is normal.`));
