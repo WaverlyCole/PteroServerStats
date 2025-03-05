@@ -13,7 +13,6 @@ const questions = [
     "Please enter your panel API key: ",
     "Please enter your discord bot token: ",
     "Please enter your discord channel ID: ",
-    "Please enter your panel server ID: "
 ];
 
 const Question = {
@@ -21,7 +20,6 @@ const Question = {
     panelApiKey: 1,
     botToken: 2,
     channelId: 3,
-    serverID: 4,
 }
 
 const answers = [];
@@ -55,9 +53,6 @@ module.exports = function Setup() {
                 } else if (index === Question.channelId && !/^\d+$/.test(answer)) {
                     console.log(cliColor.redBright("❌ Invalid Channel ID. It must be a number."));
                     isValid = false;
-                } else if (index === Question.serverID && !uuid.validate(answer)) {
-                    console.log(cliColor.redBright("❌ Invalid Panel Server ID."));
-                    isValid = false
                 }
 
                 if (index === Question.panelApiKey && /^(peli_|ptla_)/.test(answer)) {
@@ -80,16 +75,7 @@ module.exports = function Setup() {
                     "Authorization": `Bearer ${answers[Question.panelApiKey]}`
                 },
             }).then(() => {
-                console.log(" \n" + cliColor.green("✓ Valid Panel Credentials."));
-
-                axios(`${new URL(answers[Question.panelUrl]).origin}/api/client/servers/${answers[Question.serverID]}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${answers[Question.panelApiKey]}`
-                    },
-                }).then(() => {
-                    console.log(cliColor.green("✓ Valid Panel Server ID."));
+                    console.log(" \n" + cliColor.green("✓ Valid Panel Credentials."));
 
                     const client = new Client({
                         intents: [GatewayIntentBits.Guilds]
@@ -108,7 +94,6 @@ module.exports = function Setup() {
                                 `PanelKEY=${answers[Question.panelApiKey]}\n` +
                                 `DiscordBotToken=${answers[Question.botToken]}\n` +
                                 `DiscordChannel=${answers[Question.channelId]}\n` +
-                                `ServerID=${answers[Question.serverID]}`,
                                 "utf8"
                             );
 
@@ -126,38 +111,6 @@ module.exports = function Setup() {
                         process.exit()
                     })
                 }).catch((error) => {
-                    console.log(" \n" + cliColor.redBright("❌ Invalid Server ID."));
-                    if (error.code === "ENOTFOUND") {
-                        console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("ENOTFOUND | DNS Error. Ensure your network connection and DNS server are functioning correctly."));
-                    } else if (error.code === "ECONNREFUSED") {
-                        console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("ECONNREFUSED | Connection refused. Ensure the panel is running and reachable."));
-                    } else if (error.code === "ETIMEDOUT") {
-                        console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("ETIMEDOUT | Connection timed out. The panel took too long to respond."));
-                    } else if (error.code === "ECONNRESET") {
-                        console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("ECONNRESET | Connection reset by peer. The panel closed the connection unexpectedly."));
-                    } else if (error.code === "EHOSTUNREACH") {
-                        console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("EHOSTUNREACH | Host unreachable. The panel is down or not reachable."));
-                    } else if (error.response) {
-                        if (error.response.status === 401) {
-                            console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("401 | Unauthorized. Invalid Application Key or API Key doesn't have permission to perform this action."));
-                        } else if (error.response.status === 403) {
-                            console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("403 | Forbidden. Invalid Application Key or API Key doesn't have permission to perform this action."));
-                        } else if (error.response.status === 404) {
-                            console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("404 | Not Found. Invalid Panel URL or the Panel doesn't exist."));
-                        } else if (error.response.status === 429) {
-                            console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("429 | Too Many Requests. You have sent too many requests in a given amount of time."));
-                        } else if ([500, 502, 503, 504].includes(error.response.status)) {
-                            console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("500 | Internal Server Error. This is an error with your panel, PSS is not the cause."));
-                        } else {
-                            console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright(`${error.response.status} | Unexpected error: ${error.response.statusText}`));
-                        }
-                    } else {
-                        console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright(`Unexpected error: ${error.message}`));
-                    }
-                    console.log(" \n" + cliColor.redBright("Please run the setup again and fill in the correct credentials."));
-                    process.exit()
-                })
-            }).catch((error) => {
                 console.log(" \n" + cliColor.redBright("❌ Invalid Panel Credentials."));
                 if (error.code === "ENOTFOUND") {
                     console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("ENOTFOUND | DNS Error. Ensure your network connection and DNS server are functioning correctly."));

@@ -1,4 +1,4 @@
-const getServerDetails = require("./getServerDetails.js");
+const getAllServers = require("./getAllServers.js");
 const getServerStats = require("./getServerStats.js");
 const promiseTimeout = require("./promiseTimeout.js");
 const sendMessage = require("./sendMessage.js");
@@ -8,18 +8,26 @@ const fs = require("node:fs");
 
 module.exports = async function getStats(client) {
     try {
-        console.log(cliColor.cyanBright("[PSS] ") + cliColor.yellow("Fetching server details..."))
-        const details = await promiseTimeout(getServerDetails(), config.timeout * 1000);
-        if (!details) throw new Error("Failed to get server details");
+        console.log(cliColor.cyanBright("[PSS] ") + cliColor.yellow("Fetching servers details..."))
+        const allServers = await promiseTimeout(getAllServers(), config.timeout * 1000);
+        if (!allServers) throw new Error("Failed to get server details");
 
-        console.log(cliColor.cyanBright("[PSS] ") + cliColor.yellow("Fetching server resources..."))
-        const stats = await promiseTimeout(getServerStats(), config.timeout * 1000);
-        if (stats.current_state === "missing") console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("Server is currently down."))
-        else console.log(cliColor.cyanBright("[PSS] ") + cliColor.green("Server state is normal."))
+        console.log(cliColor.cyanBright("[PSS] ") + cliColor.yellow("Fetching servers resources..."));
+
+        for (const server of allServers) {
+            const serverStats = await promiseTimeout(getServerStats(server.uuid), config.timeout * 1000);
+
+            if (stats.current_state === "missing") {
+                console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright(`${server.name} (${server.uuid}) is currently down.`));
+            } else {
+                console.log(cliColor.cyanBright("[PSS] ") + cliColor.green(`${server.name} (${server.uuid}) state is normal.`));
+            }
+
+            server.stats = serverStats
+        }
 
         const data = {
-            details,
-            stats,
+            allServers,
             timestamp: Date.now()
         }
 
