@@ -27,13 +27,8 @@ module.exports = async function getStats(client) {
             server.stats = serverStats
         }
 
-        const data = {
-            allServers,
-            timestamp: Date.now()
-        }
-
-        sendMessage(client, data)
-        return data
+        sendMessage(client, allServers)
+        return allServers
     } catch (error) {
         if (config.log_error) console.error(error)
         console.log(cliColor.cyanBright("[PSS] ") + cliColor.redBright("Server is currently down."));
