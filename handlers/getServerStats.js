@@ -1,8 +1,8 @@
 const config = require("./configuration.js");
 const axios = require("axios");
 
-module.exports = async function getWingsStatus() {
-    return axios.get(`${process.env.PanelURL}/api/client/servers/${process.env.ServerID}/resources`, {
+module.exports = async function getWingsStatus(serverID) {
+    return axios.get(`${process.env.PanelURL}/api/client/servers/serverID/resources`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.PanelKEY}`,
