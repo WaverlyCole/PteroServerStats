@@ -34,14 +34,14 @@ module.exports = async function sendMessage(client, allServers) {
                 new EmbedBuilder()
                     .setTitle("Server down")
                     .setColor("ED4245")
-                    .setDescription(`Server \`${server.details.name}\` is down.`)
+                    .setDescription(`Server \`${server.name}\` is down.`)
             );
         } else if (server.stats.current_state !== "missing" && cache?.stats?.current_state === "missing") {
             webhook(
                 new EmbedBuilder()
                     .setTitle("Server online")
                     .setColor("57F287")
-                    .setDescription(`Server \`${server.details.name}\` is back online.`)
+                    .setDescription(`Server \`${server.name}\` is back online.`)
             );
         }
 
@@ -58,11 +58,11 @@ module.exports = async function sendMessage(client, allServers) {
             .addFields({ name: "Status", value: ["starting", "running"].includes(server.stats.current_state) ? config.status.online : config.status.offline });
 
         // Add fields for server stats
-        if (config.server.details && ["starting", "running"].includes(server.stats.current_state)) {
+        if (config.server && ["starting", "running"].includes(server.stats.current_state)) {
             if (config.server.memory)
-                embed.addFields({ inline: config.embed.fields.inline, name: "Memory Usage", value: `\`${bytes.format(server.stats.resources.memory_bytes, { unitSeparator: " " })}\` / \`${server.details.limits.memory === 0 ? "∞" : bit(server.details.limits.memory * 1000000)}\`` });
+                embed.addFields({ inline: config.embed.fields.inline, name: "Memory Usage", value: `\`${bytes.format(server.stats.resources.memory_bytes, { unitSeparator: " " })}\` / \`${server.limits.memory === 0 ? "∞" : bit(server.limits.memory * 1000000)}\`` });
             if (config.server.disk)
-                embed.addFields({ inline: config.embed.fields.inline, name: "Disk Usage", value: `\`${bytes.format(server.stats.resources.disk_bytes, { unitSeparator: " " })}\` / \`${server.details.limits.disk === 0 ? "∞" : bit(server.details.limits.disk * 1000000)}\`` });
+                embed.addFields({ inline: config.embed.fields.inline, name: "Disk Usage", value: `\`${bytes.format(server.stats.resources.disk_bytes, { unitSeparator: " " })}\` / \`${server.limits.disk === 0 ? "∞" : bit(server.limits.disk * 1000000)}\`` });
             if (config.server.cpu)
                 embed.addFields({ inline: config.embed.fields.inline, name: "CPU Load", value: `\`${server.stats.resources.cpu_absolute.toFixed(2)}%\`` });
             if (config.server.network)
