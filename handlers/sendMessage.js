@@ -49,7 +49,7 @@ module.exports = async function sendMessage(client, allServers) {
         const embed = new EmbedBuilder()
             .setAuthor({ name: config.embed.author.name || null, iconURL: config.embed.author.icon || null })
             .setTitle(server.name || null)
-            .setDescription(config.embed.description.replace("{{time}}", time(new Date(Date.now() + 10000), "R")) || null)
+            .setDescription(config.embed.description.replace("{{time}}", time(new Date(Date.now() + (config.refresh * 1000)), "R")) || null)
             .setColor(config.embed.color || null)
             .setImage(config.embed.image || null)
             .setTimestamp(config.embed.timestamp ? new Date() : null)

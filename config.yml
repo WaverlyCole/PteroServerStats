@@ -23,7 +23,6 @@ embed:
   author:
     name: "" # Author name for the panel embed.
     icon: "" # Icon URL for the author of the panel embed.
-  title: "Server Stats" # Title of the panel stats embed.
   description: "Next update {{time}}" # Description for the panel. {{time}} will display the next refresh time.
   timestamp: true # Show the timestamp in the embed (true/false).
   color: "5865F2" # Embed color in hex format.
