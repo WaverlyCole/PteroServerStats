@@ -49,10 +49,9 @@ module.exports = async function sendMessage(client, allServers) {
         const embed = new EmbedBuilder()
             .setAuthor({ name: config.embed.author.name || null, iconURL: config.embed.author.icon || null })
             .setTitle(server.name || null)
-            .setDescription(config.embed.description.replace("{{time}}", time(new Date(Date.now() + (config.refresh * 1000)), "R")) || null)
+            .setDescription(null)
             .setColor(config.embed.color || null)
             .setImage(config.embed.image || null)
-            .setTimestamp(config.embed.timestamp ? new Date() : null)
             .setThumbnail(config.embed.thumbnail || null)
             .setFooter({ text: config.embed.footer.text || null, iconURL: config.embed.footer.icon || null })
             .addFields({ name: "Status", value: ["starting", "running"].includes(server.stats.current_state) ? config.status.online : config.status.offline });
@@ -74,6 +73,18 @@ module.exports = async function sendMessage(client, allServers) {
         // Add the current server's embed to the array
         embeds.push(embed);
     }
+
+    const embed = new EmbedBuilder()
+        .setAuthor({ name: config.embed.author.name || null, iconURL: config.embed.author.icon || null })
+        .setTitle(null)
+        .setDescription(config.embed.description.replace("{{time}}", time(new Date(Date.now() + (config.refresh * 3000)), "R")) || null)
+        .setColor(config.embed.color || null)
+        .setImage(config.embed.image || null)
+        .setTimestamp(config.embed.timestamp ? new Date() : null)
+        .setThumbnail(config.embed.thumbnail || null)
+        .setFooter({ text: config.embed.footer.text || null, iconURL: config.embed.footer.icon || null })
+        .addFields({ name: "Status", value: ["starting", "running"].includes(server.stats.current_state) ? config.status.online : config.status.offline });
+        embeds.push(embed);
 
     // Fetch the channel to send the message
     const channel = await client.channels.fetch(process.env.DiscordChannel);
