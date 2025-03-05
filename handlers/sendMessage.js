@@ -9,6 +9,8 @@ const bytes = require("bytes");
 const fs = require("node:fs");
 
 module.exports = async function sendMessage(client, allServers) {
+    console.log(allServers)
+
     // Cache handling
     let cache = (() => {
         try {

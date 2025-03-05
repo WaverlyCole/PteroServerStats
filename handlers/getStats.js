@@ -10,7 +10,6 @@ module.exports = async function getStats(client) {
     try {
         console.log(cliColor.cyanBright("[PSS] ") + cliColor.yellow("Fetching servers details..."))
         const allServers = await promiseTimeout(getAllServers(), config.timeout * 1000);
-        console.log(allServers)
         if (!allServers) throw new Error("Failed to get server details");
 
         console.log(cliColor.cyanBright("[PSS] ") + cliColor.yellow("Fetching servers resources..."));
